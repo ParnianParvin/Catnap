@@ -1,0 +1,210 @@
+import processing.serial.*;
+import processing.video.*;
+
+Serial myPort;
+Movie movie1;
+Movie movie2;
+Movie movie11;
+Movie movie22;
+int pot1;
+int pot2;
+String str1;
+String str2;
+int L;
+int len;
+char c ;
+String temp;
+boolean flag1 = true;
+boolean flag2 = true;
+
+void setup()  {
+  
+  size(1824, 1080);
+  frameRate(30);
+  movie1 = new Movie(this, "clk.mpeg");
+  movie2 = new Movie(this, "crk.mpeg");
+  movie11 = new Movie(this, "clr.mpeg");
+  movie22 = new Movie(this, "crr.mpeg");  
+ 
+  printArray(Serial.list());
+  
+  String portName = Serial.list()[0];
+  myPort = new Serial(this, portName, 9600);
+  myPort.bufferUntil('\n');
+  
+}
+
+void draw(){
+  
+  if (movie1.available()) {
+    movie1.read();
+  }
+ 
+  if (movie2.available()) {
+    movie2.read();
+  }
+
+  if (movie11.available()) {
+    movie11.read();
+  }
+
+  if (movie22.available()) {
+    movie22.read();
+  }
+  
+  
+  
+  if(pot1>730){
+   image(movie11, 0, 0);
+ }
+     
+  else if(pot1 >= 515 && pot1<730){
+   image(movie1, 0, 0); 
+ }
+       
+  else if(pot1>= 380 && pot1<515){   
+   image(movie11, 0, 0);   
+ }   
+       
+  else if(pot1 >= 330 && pot1<380){
+   image(movie1, 0, 0);    
+ }     
+            
+  else if(pot1>= 120 && pot1<330){  
+   image(movie11, 0, 0);   
+ }  
+       
+       
+      
+  if(pot2>515){
+    image(movie22, 912, 0);  
+ }
+                    
+  else if(pot2>=465 && pot2<515){
+    image(movie2, 912, 0);      
+ }
+          
+  else if(pot2>= 290 && pot2<465){
+     image(movie22, 912, 0);     
+ }
+ 
+  else if(pot2>=100 && pot2<290){
+    image(movie2, 912, 0);      
+ }
+  
+  else if(pot2<100){
+    image(movie22, 912, 0);     
+ }
+  
+  
+  
+  if(pot1>730 && flag1 == true){    
+    movie11.jump(0);
+    movie11.play();
+    flag1 = false;
+    delay(300);    
+ }
+  
+  else if(pot1>=515 && pot1<730 && flag1==false){
+    movie1.jump(0);
+    movie1.play();
+    flag1 = true;
+    delay(300);
+ }
+  
+ 
+  else if(pot1>=380 && pot1<515  && flag1 == true){    
+    movie11.jump(0);
+    movie11.play();
+    flag1 = false;
+    delay(300);    
+ }
+ 
+   else if(pot1>330 && pot1<=380 && flag1==false){
+     movie1.jump(0);
+     movie1.play();
+     flag1 = true;
+     delay(300);
+ }
+  
+  else if(pot1>120 && pot1<330  && flag1 == true){    
+    movie11.jump(0);
+    movie11.play();
+    flag1 = false;
+    delay(300);    
+ }
+ 
+ 
+  
+  if(pot2>515 && flag2 == true){
+    movie22.jump(0);
+    movie22.play();
+    flag2 = false;
+    delay(300);    
+ }
+  
+  else if(pot2>=465 && pot2<515 && flag2==false){
+    movie2.jump(0);
+    movie2.play();
+    flag2 = true;
+    delay(300);
+ }
+   
+  else if(pot2>=290 && pot2<465 && flag2 == true){    
+    movie22.jump(0);
+    movie22.play();
+    flag2 = false;
+    delay(300);    
+ }
+    
+  else if(pot2>=100 && pot2<290 && flag2==false){    
+    movie2.jump(0);
+    movie2.play();
+    flag2 = true;
+    delay(300);
+ }
+  
+  else if(pot2<100 && flag2 == true){    
+    movie22.jump(0);
+    movie22.play();
+    flag2 = false;
+    delay(300);    
+ }
+  
+  
+  
+  
+}  
+
+
+void serialEvent(Serial myPort){
+ 
+  String myString = myPort.readStringUntil('\n');
+  if (myString !=null) {
+    
+    myString = trim(myString);    
+    pot1 = int(myString);
+    L = myString.length();
+
+    for(int i = 0; i < L;i++){      
+      c = myString.charAt(i);
+      
+      if (c =='.'){
+        len = i;
+      }
+      
+    }
+    
+    temp = "";
+    for(int j = len+1; j < L; j++){
+     
+      c = myString.charAt(j);
+      temp = temp + c;      
+    }
+    
+    pot2 = int(temp);
+    println("arduino says :" + pot1+ "  " + pot2);
+    
+  }
+}
+  
