@@ -1,7 +1,8 @@
 import processing.serial.*;
-import processing.video.*;
-
 Serial myPort;
+
+
+import processing.video.*;
 Movie movie1;
 Movie movie2;
 Movie movie11;
@@ -205,6 +206,7 @@ void serialEvent(Serial myPort){
     pot2 = int(temp);
     println("arduino says :" + pot1+ "  " + pot2);
     
+    
   }
 }
-  
+ 
